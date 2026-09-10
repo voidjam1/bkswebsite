@@ -13,15 +13,13 @@
 
     html, body {
         margin: 0;
+        padding: 0;
         width: 100%;
         min-height: 100%;
     }
 
     body {
-        background-image: url("background.png");
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
+        background: #000;
 
         font-family: "MS Gothic", "ＭＳ ゴシック", monospace;
         color: white;
@@ -29,17 +27,37 @@
         cursor: default;
     }
 
-    /* 点击后出现的 UI */
+
+    /* =========================
+       背景图片
+       ========================= */
+
+    .background {
+        display: block;
+
+        width: 100%;
+        height: auto;
+
+        user-select: none;
+        pointer-events: none;
+    }
+
+
+    /* =========================
+       主 UI
+       ========================= */
+
     #ui {
         position: fixed;
 
         top: 50%;
         left: 50%;
+
         transform: translate(-50%, -50%);
 
         width: min(650px, 85vw);
 
-        background: rgba(20, 20, 20, 0.9);
+        background: rgba(20, 20, 20, 0.92);
 
         border: 2px solid white;
 
@@ -61,7 +79,11 @@
         visibility: visible;
     }
 
-    /* 老式电脑标题栏 */
+
+    /* =========================
+       标题栏
+       ========================= */
+
     .title-bar {
         height: 32px;
 
@@ -93,10 +115,16 @@
         border: 1px solid white;
 
         font-family: monospace;
+
         cursor: pointer;
 
         user-select: none;
     }
+
+
+    /* =========================
+       主窗口内容
+       ========================= */
 
     .content {
         padding: 35px;
@@ -104,15 +132,15 @@
         min-height: 250px;
 
         font-size: 16px;
+
         line-height: 1.8;
     }
 
-    /* 页面本身可以继续往下滚 */
-    .space {
-        height: 150vh;
-    }
 
-    /* 滚动后出现的小窗口 */
+    /* =========================
+       滚动后出现的小窗口
+       ========================= */
+
     #popup {
         position: fixed;
 
@@ -121,7 +149,7 @@
 
         width: 280px;
 
-        background: rgba(20, 20, 20, 0.92);
+        background: rgba(20, 20, 20, 0.94);
 
         border: 2px solid white;
 
@@ -129,6 +157,7 @@
             5px 5px 0 rgba(0, 0, 0, 0.7);
 
         opacity: 0;
+
         transform: translateY(20px);
 
         transition:
@@ -142,6 +171,7 @@
 
     #popup.show {
         opacity: 1;
+
         transform: translateY(0);
 
         pointer-events: auto;
@@ -151,23 +181,76 @@
         padding: 20px;
 
         font-size: 14px;
+
         line-height: 1.7;
     }
+
+
+    /* =========================
+       手机适配
+       ========================= */
+
+    @media (max-width: 600px) {
+
+        #ui {
+            width: 90vw;
+        }
+
+        .content {
+            padding: 25px;
+
+            font-size: 14px;
+        }
+
+        #popup {
+            right: 15px;
+            bottom: 15px;
+
+            width: 250px;
+        }
+
+    }
+
 </style>
 </head>
 
+
 <body>
 
-<!-- 点击页面后出现的主 UI -->
+
+<!-- =========================
+     背景
+     ========================= -->
+
+<img
+    src="background.png"
+    class="background"
+    alt=""
+>
+
+
+<!-- =========================
+     主 UI
+     ========================= -->
+
 <div id="ui">
 
     <div class="title-bar">
-        <span class="title">MANGA_CLUB.exe</span>
-        <span class="close" id="close">×</span>
+
+        <span class="title">
+            MANGA_CLUB.exe
+        </span>
+
+        <span class="close" id="close">
+            ×
+        </span>
+
     </div>
 
+
     <div class="content">
-        <!-- 之后把文字放这里 -->
+
+        <!-- 之后把正式文字放这里 -->
 
         <p>WELCOME.</p>
 
@@ -176,23 +259,37 @@
         </p>
 
         <p>
-            > loading...
+            &gt; loading...
         </p>
+
     </div>
 
 </div>
 
 
-<!-- 滚动后出现的小窗口 -->
+
+<!-- =========================
+     滚动后出现的小窗口
+     ========================= -->
+
 <div id="popup">
 
     <div class="title-bar">
-        <span class="title">NOTICE.txt</span>
-        <span class="close">×</span>
+
+        <span class="title">
+            NOTICE.txt
+        </span>
+
+        <span class="close">
+            ×
+        </span>
+
     </div>
 
+
     <div class="popup-content">
-        <!-- 之后可以在这里放彩蛋之类的 -->
+
+        <!-- 之后可以放彩蛋 -->
 
         hello.
 
@@ -200,9 +297,6 @@
 
 </div>
 
-
-<!-- 用来制造滚动空间 -->
-<div class="space"></div>
 
 
 <script>
@@ -212,10 +306,18 @@ const closeButton = document.getElementById("close");
 const popup = document.getElementById("popup");
 
 
-// 点击页面 → UI 开 / 关
+
+/* =========================
+   点击页面 → UI 开 / 关
+   ========================= */
+
 document.addEventListener("click", function(event) {
 
-    // 如果点的是关闭按钮，就不执行这里
+    /*
+       如果点击的是 UI 本身，
+       不触发背景的开关
+    */
+
     if (
         event.target.closest("#ui") ||
         event.target.closest("#popup")
@@ -223,12 +325,17 @@ document.addEventListener("click", function(event) {
         return;
     }
 
+
     ui.classList.toggle("show");
 
 });
 
 
-// 点击主窗口右上角关闭
+
+/* =========================
+   点击 X → 关闭主 UI
+   ========================= */
+
 closeButton.addEventListener("click", function(event) {
 
     event.stopPropagation();
@@ -238,18 +345,27 @@ closeButton.addEventListener("click", function(event) {
 });
 
 
-// 滚动到一定程度 → 弹出小窗口
+
+/* =========================
+   滚动 → 显示小窗口
+   ========================= */
+
 window.addEventListener("scroll", function() {
 
     if (window.scrollY > 300) {
+
         popup.classList.add("show");
+
     } else {
+
         popup.classList.remove("show");
+
     }
 
 });
 
 </script>
+
 
 </body>
 </html>
