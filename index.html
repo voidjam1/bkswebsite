@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Manga Club</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    html, body {
+        margin: 0;
+        width: 100%;
+        min-height: 100%;
+    }
+
+    body {
+        background-image: url("background.png");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+
+        font-family: "MS Gothic", "ＭＳ ゴシック", monospace;
+        color: white;
+
+        cursor: default;
+    }
+
+    /* 点击后出现的 UI */
+    #ui {
+        position: fixed;
+
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        width: min(650px, 85vw);
+
+        background: rgba(20, 20, 20, 0.9);
+
+        border: 2px solid white;
+
+        box-shadow:
+            6px 6px 0 rgba(0, 0, 0, 0.7);
+
+        opacity: 0;
+        visibility: hidden;
+
+        transition:
+            opacity 0.15s ease,
+            visibility 0.15s ease;
+
+        z-index: 10;
+    }
+
+    #ui.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* 老式电脑标题栏 */
+    .title-bar {
+        height: 32px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 0 8px;
+
+        background: #303030;
+
+        border-bottom: 2px solid white;
+
+        font-size: 14px;
+    }
+
+    .title {
+        white-space: nowrap;
+    }
+
+    .close {
+        width: 20px;
+        height: 20px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border: 1px solid white;
+
+        font-family: monospace;
+        cursor: pointer;
+
+        user-select: none;
+    }
+
+    .content {
+        padding: 35px;
+
+        min-height: 250px;
+
+        font-size: 16px;
+        line-height: 1.8;
+    }
+
+    /* 页面本身可以继续往下滚 */
+    .space {
+        height: 150vh;
+    }
+
+    /* 滚动后出现的小窗口 */
+    #popup {
+        position: fixed;
+
+        right: 30px;
+        bottom: 30px;
+
+        width: 280px;
+
+        background: rgba(20, 20, 20, 0.92);
+
+        border: 2px solid white;
+
+        box-shadow:
+            5px 5px 0 rgba(0, 0, 0, 0.7);
+
+        opacity: 0;
+        transform: translateY(20px);
+
+        transition:
+            opacity 0.25s ease,
+            transform 0.25s ease;
+
+        pointer-events: none;
+
+        z-index: 20;
+    }
+
+    #popup.show {
+        opacity: 1;
+        transform: translateY(0);
+
+        pointer-events: auto;
+    }
+
+    .popup-content {
+        padding: 20px;
+
+        font-size: 14px;
+        line-height: 1.7;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- 点击页面后出现的主 UI -->
+<div id="ui">
+
+    <div class="title-bar">
+        <span class="title">MANGA_CLUB.exe</span>
+        <span class="close" id="close">×</span>
+    </div>
+
+    <div class="content">
+        <!-- 之后把文字放这里 -->
+
+        <p>WELCOME.</p>
+
+        <p>
+            Manga Club Cultural Festival
+        </p>
+
+        <p>
+            > loading...
+        </p>
+    </div>
+
+</div>
+
+
+<!-- 滚动后出现的小窗口 -->
+<div id="popup">
+
+    <div class="title-bar">
+        <span class="title">NOTICE.txt</span>
+        <span class="close">×</span>
+    </div>
+
+    <div class="popup-content">
+        <!-- 之后可以在这里放彩蛋之类的 -->
+
+        hello.
+
+    </div>
+
+</div>
+
+
+<!-- 用来制造滚动空间 -->
+<div class="space"></div>
+
+
+<script>
+
+const ui = document.getElementById("ui");
+const closeButton = document.getElementById("close");
+const popup = document.getElementById("popup");
+
+
+// 点击页面 → UI 开 / 关
+document.addEventListener("click", function(event) {
+
+    // 如果点的是关闭按钮，就不执行这里
+    if (
+        event.target.closest("#ui") ||
+        event.target.closest("#popup")
+    ) {
+        return;
+    }
+
+    ui.classList.toggle("show");
+
+});
+
+
+// 点击主窗口右上角关闭
+closeButton.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    ui.classList.remove("show");
+
+});
+
+
+// 滚动到一定程度 → 弹出小窗口
+window.addEventListener("scroll", function() {
+
+    if (window.scrollY > 300) {
+        popup.classList.add("show");
+    } else {
+        popup.classList.remove("show");
+    }
+
+});
+
+</script>
+
+</body>
+</html>
